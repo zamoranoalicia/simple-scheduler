@@ -14,6 +14,4 @@ public class Enrollment {
     String lectureCode;
 
     Integer studentId;
-
-    Date dateOfEnrollment;
 }

@@ -9,7 +9,7 @@ import lombok.Value;
 @AllArgsConstructor
 public class Student {
 
-    Integer studentId;
+    String studentId;
 
     String firstName;
 
