@@ -6,7 +6,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public enum ErrorCode {
 
-    USER_EXCEPTION("userException");
+    USER_EXCEPTION("userException"),
+    ENROLLMENT_EXCEPTION("enrollmentException");
 
     private final String code;
 
