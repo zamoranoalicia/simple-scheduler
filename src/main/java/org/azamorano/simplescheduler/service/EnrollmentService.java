@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.azamorano.simplescheduler.domain.Enrollment;
 import org.azamorano.simplescheduler.domain.Lecture;
+import org.azamorano.simplescheduler.domain.Student;
 import org.azamorano.simplescheduler.repository.EnrollmentRepository;
 import org.azamorano.simplescheduler.restcontroller.exception.EnrollmentException;
 import org.azamorano.simplescheduler.restcontroller.model.request.EnrollmentRequest;
@@ -23,8 +24,9 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 public class EnrollmentService {
     private final EnrollmentRepository enrollmentRepository;
     private final LectureService lectureService;
+    private final LectureRegistryService lectureRegistryService;
 
-    public void enrollStudent(String studentId, EnrollmentRequest enrollmentRequest) {
+    public void enrollStudent(Student student, EnrollmentRequest enrollmentRequest) {
         Lecture lecture = lectureService.getLectureByLectureCode(enrollmentRequest.getLectureCode());
         if (lecture == null) {
             throw new EnrollmentException(String.format(INVALID_PARAMS, enrollmentRequest.getLectureCode()),
@@ -32,19 +34,21 @@ public class EnrollmentService {
         }
         try {
 
-            Enrollment existingEnrolment = enrollmentRepository.get(studentId);
+            Enrollment existingEnrolment = enrollmentRepository.get(student.getStudentId());
+            Set<Lecture> lectureSet;
 
             if (existingEnrolment != null) {
-                Set<Lecture> lectureSet = new HashSet<>(existingEnrolment.getLectures());
+                lectureSet = new HashSet<>(existingEnrolment.getLectures());
                 lectureSet.add(lecture);
                 Enrollment updatedEnrollment = existingEnrolment.toBuilder().lectures(lectureSet).build();
                 enrollmentRepository.remove(existingEnrolment);
                 enrollmentRepository.save(updatedEnrollment);
             } else {
-                Set<Lecture> lectureSet = new HashSet<>();
+                lectureSet = new HashSet<>();
                 lectureSet.add(lecture);
-                enrollmentRepository.save(Enrollment.builder().studentId(studentId).lectures(lectureSet).build());
+                enrollmentRepository.save(Enrollment.builder().studentId(student.getStudentId()).lectures(lectureSet).build());
             }
+            lectureRegistryService.recordStudent(student, enrollmentRequest.getLectureCode());
 
         } catch (Exception exception) {
             throw new EnrollmentException(exception.getMessage(), INTERNAL_SERVER_ERROR);

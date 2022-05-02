@@ -3,6 +3,7 @@ package org.azamorano.simplescheduler.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.azamorano.simplescheduler.domain.Enrollment;
+import org.azamorano.simplescheduler.domain.Lecture;
 import org.azamorano.simplescheduler.domain.Student;
 import org.azamorano.simplescheduler.repository.StudentRepository;
 import org.azamorano.simplescheduler.restcontroller.exception.StudentException;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -88,23 +90,51 @@ public class StudentService {
     }
 
     public void enroll(String id, EnrollmentRequest enrollmentRequest) {
-       Student student = studentRepository.get(id);
-       if (student == null) {
-           throw new StudentException(String.format(INVALID_PARAMS, ID));
-       }
-       enrollmentService.enrollStudent(id, enrollmentRequest);
+        Student student = studentRepository.get(id);
+        if (student == null) {
+            throw new StudentException(String.format(INVALID_PARAMS, ID), BAD_REQUEST);
+        }
+        enrollmentService.enrollStudent(student, enrollmentRequest);
     }
 
     public StudentEnrollmentResponse getAllEnrollmentsByStudent(String id, Map<String, String> params) {
         Student student = studentRepository.get(id);
         if (student == null) {
-            throw new StudentException(String.format(INVALID_PARAMS, ID));
+            throw new StudentException(String.format(INVALID_PARAMS, ID), BAD_REQUEST);
         }
         Enrollment enrollment = enrollmentService.getEnrollmentsByStudentId(id, params);
+        Set<Lecture> lectures = new HashSet<>();
+        if (enrollment != null) {
+            lectures = enrollment.getLectures();
+        }
         return StudentEnrollmentResponse
                 .builder()
                 .student(student)
-                .lectureSet(enrollment.getLectures())
+                .lectureSet(lectures)
                 .build();
+    }
+
+    public Student updateStudent(String id, StudentRequest studentRequest) {
+        Student student = studentRepository.get(id);
+        if (student == null) {
+            throw new StudentException(String.format(INVALID_PARAMS, ID), BAD_REQUEST);
+        }
+        return studentRepository.update(Student.builder()
+                .studentId(id)
+                .firstName(studentRequest.getFirstName())
+                .lastName(studentRequest.getLastName())
+                .build());
+    }
+
+    public void deleteStudent(String id) {
+        Student student = studentRepository.get(id);
+        if (student == null) {
+            throw new StudentException(String.format(INVALID_PARAMS, ID), BAD_REQUEST);
+        }
+        studentRepository.remove(student);
+    }
+
+    public List<Student> getAllStudents(List<String> studentList) {
+        return studentRepository.getAll(studentList);
     }
 }

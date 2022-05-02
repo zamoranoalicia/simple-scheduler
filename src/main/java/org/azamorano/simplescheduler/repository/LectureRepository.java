@@ -11,8 +11,6 @@ public interface LectureRepository extends BaseRepositoryOperations {
 
     void add(Lecture lecture);
 
-    void update(Lecture lecture);
-
     void remove(Lecture lecture);
 
     List<Lecture> getAll();

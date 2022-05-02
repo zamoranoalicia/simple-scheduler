@@ -1,16 +1,21 @@
 package org.azamorano.simplescheduler.repository;
 
 import org.azamorano.simplescheduler.domain.Lecture;
+import org.azamorano.simplescheduler.restcontroller.exception.LectureException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.azamorano.simplescheduler.util.ConstantUtil.DATA_RETRIEVE_ERROR;
+import static org.azamorano.simplescheduler.util.ConstantUtil.ID;
+import static org.azamorano.simplescheduler.util.ConstantUtil.LECTURE;
+
 @Component
 public class LectureRepositoryImpl implements LectureRepository {
 
-    private SchedulerRepository schedulerRepository;
+    private final SchedulerRepository schedulerRepository;
 
     public LectureRepositoryImpl() {
         schedulerRepository = SchedulerRepository.getInstance();
@@ -18,20 +23,20 @@ public class LectureRepositoryImpl implements LectureRepository {
 
     @Override
     public Lecture get(String id) {
-        return schedulerRepository.getLectureList()
-                .stream().filter(lecture -> id.equals(lecture.getLectureCode()))
-                .findAny()
-                .orElse(null);
+        try {
+            return schedulerRepository.getLectureList()
+                    .stream().filter(lecture -> id.equals(lecture.getLectureCode()))
+                    .findAny()
+                    .orElse(null);
+        } catch (Exception ex) {
+            throw new LectureException(String.format(DATA_RETRIEVE_ERROR, LECTURE, ID, id));
+        }
+
     }
 
     @Override
     public void add(Lecture lecture) {
         schedulerRepository.getLectureList().add(lecture);
-    }
-
-    @Override
-    public void update(Lecture lecture) {
-
     }
 
     @Override

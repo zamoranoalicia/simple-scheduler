@@ -7,7 +7,8 @@ import lombok.AllArgsConstructor;
 public enum ErrorCode {
 
     USER_EXCEPTION("userException"),
-    ENROLLMENT_EXCEPTION("enrollmentException");
+    ENROLLMENT_EXCEPTION("enrollmentException"),
+    LECTURE_EXCEPTION("lectureException");
 
     private final String code;
 

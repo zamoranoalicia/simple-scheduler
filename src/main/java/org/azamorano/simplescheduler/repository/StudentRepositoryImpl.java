@@ -10,8 +10,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+import static org.azamorano.simplescheduler.util.ConstantUtil.DATA_RETRIEVE_ERROR;
+import static org.azamorano.simplescheduler.util.ConstantUtil.DATA_UPDATE_MESSAGE;
 import static org.azamorano.simplescheduler.util.ConstantUtil.STUDENT;
-import static org.azamorano.simplescheduler.util.ConstantUtil.USER_RETRIEVE_MESSAGE;
 
 @Component
 public class StudentRepositoryImpl implements StudentRepository {
@@ -35,7 +37,7 @@ public class StudentRepositoryImpl implements StudentRepository {
                     .findAny()
                     .orElse(null);
         } catch (Exception exception) {
-            throw new StudentException(String.format(USER_RETRIEVE_MESSAGE, STUDENT, id));
+            throw new StudentException(String.format(DATA_RETRIEVE_ERROR, STUDENT, id));
         }
     }
 
@@ -48,21 +50,20 @@ public class StudentRepositoryImpl implements StudentRepository {
     }
 
     @Override
-    public void update(Student student) {
-        if (student == null) {
-            return;
+    public Student update(Student student) {
+
+        try {
+            Student toBeRemoved = schedulerRepository.getStudentList().stream()
+                    .filter(std -> student.getStudentId().equals(std.getStudentId()))
+                    .findFirst()
+                    .orElse(null);
+            schedulerRepository.getStudentList().remove(toBeRemoved);
+            schedulerRepository.getStudentList().add(student);
+            return student;
+        } catch (Exception exception) {
+            throw new StudentException(String.format(DATA_UPDATE_MESSAGE, STUDENT, student.toString()));
         }
 
-        if (student != null && student.getStudentId() == null) {
-            return;
-        }
-
-        Student toBeRemoved = schedulerRepository.getStudentList().stream()
-                .filter(std -> student.getStudentId().equals(std.getStudentId()))
-                .findFirst()
-                .orElse(null);
-        schedulerRepository.getStudentList().remove(toBeRemoved);
-        schedulerRepository.getStudentList().add(student);
     }
 
     @Override
@@ -81,5 +82,12 @@ public class StudentRepositoryImpl implements StudentRepository {
                 schedulerRepository.getStudentList()))
                 .flatMap(Set::stream)
                 .collect(Collectors.toSet());
+    }
+
+    @Override
+    public List<Student> getAll(List<String> studentIds) {
+        return schedulerRepository.getStudentList()
+                .stream()
+                .filter(student -> studentIds.contains(student.getStudentId())).collect(toList());
     }
 }
