@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Value
@@ -11,10 +12,12 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class LectureRequest {
     @NotNull
+    @NotBlank
     String lectureCode;
 
     String description;
 
     @NotNull
+    @NotBlank
     String lectureTitle;
 }

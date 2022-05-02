@@ -1,7 +1,6 @@
 package org.azamorano.simplescheduler.restcontroller;
 
 import org.azamorano.simplescheduler.restcontroller.model.request.StudentRequest;
-import org.azamorano.simplescheduler.service.EnrollmentService;
 import org.azamorano.simplescheduler.service.StudentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,31 +15,23 @@ import static org.mockito.Mockito.verify;
 public class StudentControllerTest {
     @Mock
     private StudentService studentService;
-    @Mock
-    private EnrollmentService enrollmentService;
 
     private StudentController studentController;
 
     @BeforeEach
     void setUp() {
-        studentController = new StudentController(studentService, enrollmentService);
+        studentController = new StudentController(studentService);
     }
 
     @Test
-    void shouldSaveStudent() {
+    void shouldCallSaveStudent() {
         studentController.saveStudent(StudentRequest.builder().build());
         verify(studentService).save(any(StudentRequest.class));
     }
 
     @Test
-    void shouldGetStudentById() {
+    void shouldCallGetStudentById() {
         studentController.getStudent("1234");
         verify(studentService).getStudentById(any(String.class));
     }
-
-//    @Test
-//    void shouldGetAllStudents() {
-//        studentController.getAll();
-//        verify(studentService).getAllStudents();
-//    }
 }

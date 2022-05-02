@@ -33,26 +33,32 @@ public class EnrollmentService {
                     BAD_REQUEST);
         }
         try {
-
             Enrollment existingEnrolment = enrollmentRepository.get(student.getStudentId());
-            Set<Lecture> lectureSet;
 
             if (existingEnrolment != null) {
-                lectureSet = new HashSet<>(existingEnrolment.getLectures());
-                lectureSet.add(lecture);
-                Enrollment updatedEnrollment = existingEnrolment.toBuilder().lectures(lectureSet).build();
-                enrollmentRepository.remove(existingEnrolment);
-                enrollmentRepository.save(updatedEnrollment);
+                enrollExistingStudent(lecture, existingEnrolment);
             } else {
-                lectureSet = new HashSet<>();
-                lectureSet.add(lecture);
-                enrollmentRepository.save(Enrollment.builder().studentId(student.getStudentId()).lectures(lectureSet).build());
+                enrollNewStudent(lecture, student);
             }
-            lectureRegistryService.recordStudent(student, enrollmentRequest.getLectureCode());
+            lectureRegistryService.updateLectureRegistry(student, enrollmentRequest.getLectureCode());
 
         } catch (Exception exception) {
             throw new EnrollmentException(exception.getMessage(), INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private void enrollExistingStudent(Lecture lecture, Enrollment existingEnrolment) {
+        Set<Lecture> lectureSet = new HashSet<>(existingEnrolment.getLectures());
+        lectureSet.add(lecture);
+        Enrollment updatedEnrollment = existingEnrolment.toBuilder().lectures(lectureSet).build();
+        enrollmentRepository.remove(existingEnrolment);
+        enrollmentRepository.save(updatedEnrollment);
+    }
+
+    private void enrollNewStudent(Lecture lecture, Student student) {
+        Set<Lecture> lectureSet = new HashSet<>();
+        lectureSet.add(lecture);
+        enrollmentRepository.save(Enrollment.builder().studentId(student.getStudentId()).lectures(lectureSet).build());
     }
 
     public Enrollment getEnrollmentsByStudentId(String id, Map<String, String> params) {
