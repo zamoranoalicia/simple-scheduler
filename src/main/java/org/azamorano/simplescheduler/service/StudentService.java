@@ -33,7 +33,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class StudentService {
+public class StudentService extends BasicService<Student> {
 
     private final StudentRepository studentRepository;
     private final EnrollmentService enrollmentService;
@@ -76,11 +76,7 @@ public class StudentService {
             if (params == null || params.isEmpty()) {
                 return studentRepository.getAll();
             }
-            List<Field> fields = Arrays.asList(Student.class.getDeclaredFields());
-            Set<String> fieldNames = fields.stream().map(field -> field.getName()).collect(Collectors.toSet());
-            if (!fieldNames.containsAll(params.keySet())) {
-                throw new StudentException(String.format(INVALID_PARAMS, params.keySet().toString()), BAD_REQUEST);
-            }
+            validateFilterParameters(params, Student.class);
             students = new ArrayList<>(studentRepository.filterBy(params));
         } catch (Exception exception) {
             log.error("Error when retrieving students");
@@ -132,9 +128,5 @@ public class StudentService {
             throw new StudentException(String.format(INVALID_PARAMS, ID), BAD_REQUEST);
         }
         studentRepository.remove(student);
-    }
-
-    public List<Student> getAllStudents(List<String> studentList) {
-        return studentRepository.getAll(studentList);
     }
 }

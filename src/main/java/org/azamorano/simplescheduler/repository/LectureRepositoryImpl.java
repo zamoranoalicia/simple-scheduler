@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.azamorano.simplescheduler.util.ConstantUtil.DATA_RETRIEVE_ERROR;
 import static org.azamorano.simplescheduler.util.ConstantUtil.ID;
@@ -50,7 +51,10 @@ public class LectureRepositoryImpl implements LectureRepository {
     }
 
     @Override
-    public Set<Lecture> filterBy(Map<String, String> params) {
-        return null;
+    public Set filterBy(Map<String, String> params) {
+        return params.entrySet().stream().map(entry -> filterBy(entry.getKey(), entry.getValue(),
+                schedulerRepository.getLectureList()))
+                .flatMap(Set::stream)
+                .collect(Collectors.toSet());
     }
 }

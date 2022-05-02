@@ -32,7 +32,6 @@ import java.util.Map;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
-
 @RestController
 @AllArgsConstructor
 @RequestMapping(value = "/students")
@@ -56,7 +55,7 @@ public class StudentController {
         return studentService.getAllStudents(params);
     }
 
-    @PostMapping(value = "/{id}/enroll")
+    @PostMapping(value = "/{id}/enrollment")
     @ResponseStatus(CREATED)
     public void enrollStudent(@NonNull @PathVariable("id") String id,
                               @NonNull @Valid @RequestBody EnrollmentRequest enrollmentRequest) {
@@ -75,7 +74,7 @@ public class StudentController {
         studentService.deleteStudent(id);
     }
 
-    @GetMapping(value = "/{id}/enroll")
+    @GetMapping(value = "/{id}/enrollment")
     public StudentEnrollmentResponse getEnrollments(@NonNull @PathVariable("id") String id, @RequestParam Map<String, String> params) {
         return studentService.getAllEnrollmentsByStudent(id, params);
     }

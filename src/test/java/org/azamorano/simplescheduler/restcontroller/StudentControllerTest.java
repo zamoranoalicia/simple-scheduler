@@ -16,14 +16,12 @@ import static org.mockito.Mockito.verify;
 public class StudentControllerTest {
     @Mock
     private StudentService studentService;
-    @Mock
-    private EnrollmentService enrollmentService;
 
     private StudentController studentController;
 
     @BeforeEach
     void setUp() {
-        studentController = new StudentController(studentService, enrollmentService);
+        studentController = new StudentController(studentService);
     }
 
     @Test
@@ -37,10 +35,4 @@ public class StudentControllerTest {
         studentController.getStudent("1234");
         verify(studentService).getStudentById(any(String.class));
     }
-
-//    @Test
-//    void shouldGetAllStudents() {
-//        studentController.getAll();
-//        verify(studentService).getAllStudents();
-//    }
 }

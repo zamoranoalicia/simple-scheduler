@@ -10,6 +10,7 @@ import org.azamorano.simplescheduler.restcontroller.model.request.LectureRequest
 import org.azamorano.simplescheduler.restcontroller.model.response.EnrollmentList;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,7 +24,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class LectureService {
+public class LectureService extends BasicService<Lecture> {
 
     private final LectureRepository lectureRepository;
     private final LectureRegistryService lectureRegistryService;
@@ -48,7 +49,11 @@ public class LectureService {
     }
 
     public List<Lecture> getAllLectures(Map<String, String> params) {
-        return lectureRepository.getAll();
+        if (params == null || params.isEmpty()) {
+            return lectureRepository.getAll();
+        }
+        validateFilterParameters(params, Lecture.class);
+        return new ArrayList<>(lectureRepository.filterBy(params));
     }
 
     public Lecture updateLecture(String lectureCode, LectureRequest lectureRequest) {

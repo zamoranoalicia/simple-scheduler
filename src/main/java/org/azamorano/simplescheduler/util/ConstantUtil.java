@@ -13,5 +13,6 @@ public class ConstantUtil {
 
     public static final String NULL_VALUE = "null";
     public static String INVALID_PARAMS = "Invalid params: %s";
+    public static String FILTERING_ERROR = "Error when filtering by %s: %s";
 
 }
