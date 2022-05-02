@@ -12,14 +12,11 @@ import org.azamorano.simplescheduler.restcontroller.model.request.StudentRequest
 import org.azamorano.simplescheduler.restcontroller.model.response.StudentEnrollmentResponse;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.azamorano.simplescheduler.util.ConstantUtil.BAD_ARGUMENT_MESSAGE;
 import static org.azamorano.simplescheduler.util.ConstantUtil.ID;

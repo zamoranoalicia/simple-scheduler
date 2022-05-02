@@ -17,7 +17,7 @@ import java.util.Set;
 public class LectureRegistryService {
     private final LectureRegistryRepository lectureRegistryRepository;
 
-    public void recordStudent(Student student, String lectureCode) {
+    public void updateLectureRegistry(Student student, String lectureCode) {
         LectureRegistry lectureRegistry = lectureRegistryRepository.get(lectureCode);
         if (lectureRegistry == null) {
             createNewRecord(student, lectureCode);

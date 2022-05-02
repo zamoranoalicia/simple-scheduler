@@ -7,7 +7,6 @@ import org.azamorano.simplescheduler.restcontroller.exception.LectureException;
 import org.azamorano.simplescheduler.restcontroller.model.request.LectureRequest;
 import org.azamorano.simplescheduler.restcontroller.model.response.EnrollmentList;
 import org.azamorano.simplescheduler.restcontroller.model.response.ErrorResponse;
-import org.azamorano.simplescheduler.service.EnrollmentService;
 import org.azamorano.simplescheduler.service.LectureService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +61,7 @@ public class LectureController {
 
     @DeleteMapping(value = "/{lectureCode}")
     @ResponseStatus(NO_CONTENT)
-    public void updateLecture(@NonNull @PathVariable("lectureCode") String lectureCode) {
+    public void deleteLecture(@NonNull @PathVariable("lectureCode") String lectureCode) {
         lectureService.removeLecture(lectureCode);
     }
 
