@@ -2,16 +2,19 @@ package org.azamorano.simplescheduler.restcontroller.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Value;
+
+import javax.validation.constraints.NotNull;
 
 @Value
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(force = true)
 public class LectureRequest {
-    @NonNull
+    @NotNull
     String lectureCode;
+
     String description;
+
+    @NotNull
+    String lectureTitle;
 }

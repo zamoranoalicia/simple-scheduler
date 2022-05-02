@@ -12,4 +12,6 @@ public class Lecture {
     String lectureCode;
 
     String lectureDescription;
+
+    String lectureTitle;
 }

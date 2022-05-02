@@ -8,4 +8,8 @@ public class EnrollmentException extends ErrorCodeException {
     public EnrollmentException(String message, HttpStatus httpStatusCode) {
         super(message, ENROLLMENT_EXCEPTION, httpStatusCode);
     }
+
+    public HttpStatus getStatusCode(){
+        return this.getStatusCode();
+    }
 }

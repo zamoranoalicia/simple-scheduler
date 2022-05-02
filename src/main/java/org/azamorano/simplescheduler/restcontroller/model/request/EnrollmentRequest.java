@@ -3,6 +3,7 @@ package org.azamorano.simplescheduler.restcontroller.model.request;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Value;
 
 @Value
@@ -10,5 +11,6 @@ import lombok.Value;
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 public class EnrollmentRequest {
+    @NonNull
     String lectureCode;
 }

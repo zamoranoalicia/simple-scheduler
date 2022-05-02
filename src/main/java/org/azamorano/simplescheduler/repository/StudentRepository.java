@@ -11,11 +11,13 @@ public interface StudentRepository extends BaseRepositoryOperations {
 
     void save(Student student);
 
-    void update(Student student);
+    Student update(Student student);
 
     void remove(Student student);
 
     List<Student> getAll();
 
     Set<Student> filterBy(Map<String, String> params);
+
+    List<Student> getAll(List<String> studentIds);
 }

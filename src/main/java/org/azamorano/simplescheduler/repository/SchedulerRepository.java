@@ -17,15 +17,15 @@ public class SchedulerRepository {
     private static volatile SchedulerRepository instance = null;
     List<Student> studentList;
     List<Enrollment> enrollmentList;
-    List<LectureRegistry> lectureRegistries;
     List<Lecture> lectureList;
+    List<LectureRegistry> lectureRegistries;
 
 
     private SchedulerRepository() {
-        studentList = new ArrayList<>();
-        enrollmentList =  new ArrayList<>();
-        lectureRegistries = new ArrayList<>();
-        lectureList = new ArrayList<>();
+        this.studentList = new ArrayList<>();
+        this.enrollmentList =  new ArrayList<>();
+        this.lectureList = new ArrayList<>();
+        this.lectureRegistries = new ArrayList<>();
     }
 
     public static SchedulerRepository getInstance() {
